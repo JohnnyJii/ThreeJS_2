@@ -25,6 +25,55 @@
 					.setPath( 'img/' )
 					.load( [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ] );
 
+			window.addEventListener('resize', function() {
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				renderer.setSize(width, height);
+				camera.aspect = width / height;
+				camera.updateProjectionMatrix();
+			});
+
+			// Scene 2
+
+			var scene2 = new THREE.Scene();
+			var camera2 = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+            document.body.appendChild( renderer.domElement );
+            
+            scene2.background = new THREE.CubeTextureLoader()
+					.setPath( 'img/' )
+					.load( [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ] );
+
+			window.addEventListener('resize', function() {
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				renderer.setSize(width, height);
+				camera2.aspect = width / height;
+				camera2.updateProjectionMatrix();
+			});
+
+
+
+			var raycaster = new THREE.Raycaster();
+			var mouse = new THREE.Vevtor2();
+
+			function onMouseMove (event) {
+				mouse.x = (event.clientX / window.innerWidth) * 2 -1;
+				mouse.y = (event.clientY / window.innerHeight) * 2 +1;
+				
+				raycaster.setFromCamera(mouse, camera);
+
+				var intersects = raycaster.intersectObjects(scene.chidren, true);
+
+				for (var i = 0; i < intersects.length; i++) {
+					intersects[i].object.material.color.set(0x000000);
+				};
+			};
+
+			//textureloader / videoloader
+
 			var geometry = new THREE.BoxGeometry();
 			// var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
             var material = new THREE.MeshPhongMaterial( { 
@@ -32,11 +81,14 @@
                 envMap: scene.background    
             } );
 
+			var video = document.getElementById('video');
+				video.play();
+				var texture2 = new THREE.videoTexture(video);
+				var material2 = new THREE.MeshBasicMaterial({map: texture2 });
+
+
             // material.flatShading = true;
             material.shininess = 160;
-
-			// var cube = new THREE.Mesh( geometry, material );
-            // scene.add( cube );
             
             object = new THREE.Mesh( new THREE.TorusKnotBufferGeometry( 1, 0.3, 100, 8 ), material );
             scene.add( object );
@@ -48,9 +100,11 @@
             var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.7 );
             directionalLight.position.set(1,1,10);
             scene.add( directionalLight );
+			scene2.add(directionalLight);
 
             var light = new THREE.AmbientLight( 0x404040 ); // soft white light
             scene.add( light );
+			scene2.add(light);
 
             // camera.position.x = 2;
 			// camera.position.z = 5;
@@ -72,10 +126,17 @@
 	            controls.update();
 
 				renderer.render( scene, camera );
+				INTERSECTED.material.emissive.setHex(0x000000);
+				scene = scene2;
 			};
 
 			animate();
 
 		</script>
+
+		<video id="video" loop muted crossorigin="anonymous"
+			playsinline style="display: none">
+		<source src="img/pano.mp4">
+		</video>
 	</body>
 </html>
