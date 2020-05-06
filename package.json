@@ -1,0 +1,30 @@
+{
+  "name": "ThreeJS-2",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "dependencies": {
+    "express": "^4.17.1",
+    "http-server": "^0.12.3",
+    "three": "^0.116.1",
+    "three-orbit-controls": "^82.1.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnnyJii/ThreeJS_2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JohnnyJii/ThreeJS_2/issues"
+  },
+  "homepage": "https://github.com/JohnnyJii/ThreeJS_2#readme"
+}

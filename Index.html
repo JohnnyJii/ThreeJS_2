@@ -9,21 +9,32 @@
 		</style>
 	</head>
 	<body>
-        <script src="js/three.js"></script>
-        <script src="js/OrbitControls.js"></script>
-		<script>
+
+		<video id="video" loop muted crossorigin="anonymous"
+			playsinline style="display: none">
+		<source src="img/pano.mp4">
+		</video>
+		
+		<script type="module">
+
+			var THREE = require('three');
+			var OrbitControls = require('three-orbit-controls');
+
 
 			// Our Javascript will go here.
 			var scene = new THREE.Scene();
-			var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
-
+			scene.background = new THREE.CubeTextureLoader()
+					.setPath( 'img/' )
+					.load( [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ] );
+			
+			
 			var renderer = new THREE.WebGLRenderer();
+			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize( window.innerWidth, window.innerHeight );
             document.body.appendChild( renderer.domElement );
             
-            scene.background = new THREE.CubeTextureLoader()
-					.setPath( 'img/' )
-					.load( [ 'posx.jpg', 'negx.jpg', 'posy.jpg', 'negy.jpg', 'posz.jpg', 'negz.jpg' ] );
+            var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
+
 
 			window.addEventListener('resize', function() {
 				var width = window.innerWidth;
@@ -57,7 +68,7 @@
 
 
 			var raycaster = new THREE.Raycaster();
-			var mouse = new THREE.Vevtor2();
+			var mouse = new THREE.Vector2();
 
 			function onMouseMove (event) {
 				mouse.x = (event.clientX / window.innerWidth) * 2 -1;
@@ -83,14 +94,14 @@
 
 			var video = document.getElementById('video');
 				video.play();
-				var texture2 = new THREE.videoTexture(video);
-				var material2 = new THREE.MeshBasicMaterial({map: texture2 });
+			var texture2 = new THREE.VideoTexture(video);
+			var material2 = new THREE.MeshBasicMaterial({ map: texture2 });
 
 
             // material.flatShading = true;
             material.shininess = 160;
             
-            object = new THREE.Mesh( new THREE.TorusKnotBufferGeometry( 1, 0.3, 100, 8 ), material );
+            var object = new THREE.Mesh( new THREE.TorusKnotBufferGeometry( 1, 0.3, 100, 8 ), material );
             scene.add( object );
 
             var axesHelper = new THREE.AxesHelper( 5 );
@@ -111,7 +122,10 @@
             // camera.position.y = 2;
 
             var controls = new THREE.OrbitControls( camera, renderer.domElement );
-            controls.update();
+			controls.enableDamping = true;
+			controls.dampingFactor = 0.05;
+			controls.update();
+    
 
             camera.position.set(2,2,5);
             camera.lookAt(axesHelper.position);
@@ -133,10 +147,5 @@
 			animate();
 
 		</script>
-
-		<video id="video" loop muted crossorigin="anonymous"
-			playsinline style="display: none">
-		<source src="img/pano.mp4">
-		</video>
 	</body>
 </html>
